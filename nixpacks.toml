@@ -1,11 +1,5 @@
-[phases.setup]
-nixPkgs = ["python311"]
+[providers]
+python = "3.11"
 
-[phases.install]
-cmds = ["pip install -r requirements.txt"]
-
-[phases.build]
-cmds = ["echo 'Build complete'"]
-
-[start]
-cmd = "python3 simple_telegram_bot.py"
+[variables]
+PYTHONPATH = "/app"
