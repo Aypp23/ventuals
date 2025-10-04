@@ -11,14 +11,21 @@ import ssl
 import logging
 import requests
 import time
+import os
 from threading import Thread
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv()
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 # Bot token
-BOT_TOKEN = "8466584047:AAG1eN3qwL3vjwUj1O-oThjk-CFfE3LkMLo"
+BOT_TOKEN = os.getenv('TELEGRAM_BOT_TOKEN')
+if not BOT_TOKEN:
+    raise ValueError("TELEGRAM_BOT_TOKEN not found in environment variables. Please check your .env file.")
 BASE_URL = f"https://api.telegram.org/bot{BOT_TOKEN}"
 
 # Store subscribed users
