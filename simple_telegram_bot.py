@@ -22,10 +22,12 @@ load_dotenv()
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-# Bot token
+# Bot token from environment variable
 BOT_TOKEN = os.getenv('TELEGRAM_BOT_TOKEN')
 if not BOT_TOKEN:
-    raise ValueError("TELEGRAM_BOT_TOKEN not found in environment variables. Please check your .env file.")
+    logger.error("TELEGRAM_BOT_TOKEN not found in environment variables!")
+    exit(1)
+
 BASE_URL = f"https://api.telegram.org/bot{BOT_TOKEN}"
 
 # Store subscribed users
@@ -106,22 +108,14 @@ def handle_start_command(chat_id, args):
             "→ 3% threshold, 10-minute alerts\n\n"
             "`/start 0x2BD5A85BFdBFB9B6CD3FB17F552a39E899BFcd40 2 120`\n"
             "→ 2% threshold, 2-minute alerts\n\n"
-            "**🎯 What I Monitor:**\n"
-            "• All Ventuals synthetic assets (vANDRL, vNLINK, vPOLY, etc.)\n"
-            "• Real-time position tracking every 30 seconds\n"
-            "• Entry prices, current values, and liquidation distances\n"
-            "• Cross and isolated margin positions\n\n"
             "**⚙️ Other Commands:**\n"
             "`/status` - Check current positions\n"
             "`/account` - View comprehensive account overview\n"
             "`/settings` - Change alert settings\n"
             "`/stop` - Stop monitoring\n"
             "`/help` - Detailed help\n\n"
-            "**🚨 Alert Colors:**\n"
-            "🔴 Red: Within threshold (immediate danger)\n"
-            "🟡 Yellow: 2x threshold (warning zone)\n"
-            "🟢 Green: Safe distance from liquidation\n\n"
-            "Ready to protect your positions! 🛡️"
+            "Ready to protect your positions! 🛡️\n\n"
+            "Built by [aomine](https://x.com/ololade_eth)"
         )
         return
     
@@ -475,17 +469,12 @@ async def handle_account_command(chat_id):
                     total_emoji = "🟢" if total_account_pnl >= 0 else "🔴"
                     
                     message += f"• Realized PnL: {realized_emoji} ${total_realized_pnl:,.2f}\n"
-                    message += f"• Unrealized PnL: {unrealized_emoji} ${total_unrealized_pnl:,.2f}\n"
-                    message += f"• Total Account PnL: {total_emoji} ${total_account_pnl:,.2f}\n\n"
+                    message += f"• Unrealized PnL: {unrealized_emoji} ${total_unrealized_pnl:,.2f}\n\n"
                     
                     message += f"**🏦 Portfolio Summary:**\n"
                     message += f"• Account Value: ${account_value:,.2f}\n"
                     message += f"• Active Positions: {len(positions):,}\n"
                     
-                    # Calculate return percentage (assuming $500 initial deposit)
-                    initial_deposit = 500
-                    return_percentage = (total_account_pnl / initial_deposit) * 100
-                    message += f"• Total Return: {return_percentage:.2f}%\n"
                     
                     send_message(chat_id, message)
                     
