@@ -402,6 +402,7 @@ async def handle_account_command(chat_id):
                     profitable_trades = 0
                     losing_trades = 0
                     total_realized_pnl = 0
+                    total_volume_usd = 0
                     largest_win = 0
                     largest_loss = 0
                     largest_win_token = ""
@@ -412,6 +413,12 @@ async def handle_account_command(chat_id):
                         coin = fill.get('coin', '')
                         clean_coin = coin.replace('vntls:', '') if coin.startswith('vntls:') else coin
                         total_realized_pnl += closed_pnl
+                        
+                        # Calculate volume in USD
+                        if 'sz' in fill and 'px' in fill:
+                            size = float(fill['sz']) if fill['sz'] is not None else 0
+                            price = float(fill['px']) if fill['px'] is not None else 0
+                            total_volume_usd += abs(size) * price
                         
                         if closed_pnl != 0:
                             if closed_pnl > 0:
@@ -448,6 +455,7 @@ async def handle_account_command(chat_id):
                     
                     message += f"**📈 Trading Statistics:**\n"
                     message += f"• Total Trades: {total_trades:,}\n"
+                    message += f"• All-Time Volume: ${total_volume_usd:,.2f}\n"
                     message += f"• Win Rate: {win_rate:.1f}%\n"
                     message += f"• Profitable Trades: {profitable_trades:,}\n"
                     message += f"• Losing Trades: {losing_trades:,}\n"
