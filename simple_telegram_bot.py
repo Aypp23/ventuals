@@ -165,9 +165,7 @@ Alerts will be sent every {duration_text} to prevent spam.
 • `/status` - Check current positions
 • `/account` - View comprehensive account overview
 • `/stop` - Stop monitoring
-• `/settings` - Change alert settings
-
-Use `/account` to see detailed trading statistics and PnL breakdown."""
+• `/settings` - Change alert settings"""
     
     send_message(chat_id, message)
 
